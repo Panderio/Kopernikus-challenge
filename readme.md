@@ -9,6 +9,7 @@ This project aims to detect and remove similar images from a dataset collected f
 - [Introduction](#introduction)
 - [Project Files](#project-files)
 - [Dataset Overview](#dataset-overview)
+- [Questions](#questions)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
@@ -55,6 +56,55 @@ The dataset provided for this project contains images from four different camera
    - Average Time Between Images: 5 minutes and 43 seconds
    - Image Resolution: Mostly 1920 x 1080
    - Notes: Some images have noise with small intervals (42 seconds), and one image has a timestamp indicating a gap of approximately 2 to 3 days.
+
+## Questions
+
+**1. What did you learn after looking at our dataset?**
+
+After analyzing the dataset provided, I observed that it contains images from four different cameras, namely c10, c20, c21, and c23. Each camera's dataset exhibits distinct characteristics in terms of the number of images, average time intervals between images, and image resolutions. Camera c10 has 126 images with an average time interval of approximately 5 minutes and 45 seconds, mostly with a resolution of 640 x 480. Camera c20 has 324 images captured at an average time interval of 5 minutes and primarily with a resolution of 1920 x 1080. Camera c21 contains 146 images with an average time interval of 5 minutes and mostly having a resolution of 1920 x 1080. However, it includes an image ("c21_2021_03_27__10_36_36") that cannot be opened and an image ("c21_2021_03_27__12_53_37") with unusually small dimensions of 10 x 6. Camera c23 comprises 484 images with an average time interval of about 5 minutes and 43 seconds, mainly having a resolution of 1920 x 1080. Some images in this dataset have small intervals (e.g., 42 seconds), and one image indicates a significant gap of approximately 2 to 3 days.
+
+**2. How does your program work?**
+
+The program follows a multithreaded approach to efficiently process images from each camera. It utilizes three main files:
+
+- `imaging_interview.py`: Contains image processing functions, such as drawing color masks, preprocessing images, and comparing frames for change detection.
+
+- `image_utils.py`: Provides utility functions to work with image files, including extracting camera IDs and timestamps, resizing images, and grouping images by camera ID.
+
+- `challenge_interview.py`: The main file orchestrating the entire process. It starts by grouping images by camera ID using the utility functions. For each camera's image group, it performs the following steps:
+  - Selects a reference image to start the comparison process.
+  - Preprocesses the reference image for change detection using the `preprocess_image_change_detection` function.
+  - Compares the reference image with other images in the group by preprocessing each image similarly.
+  - Calculates the score and contour areas of differences between the reference and other images using the `compare_frames_change_detection` function.
+  - Based on the score and specified threshold, identifies and removes similar images from the dataset.
+
+**3. What values did you decide to use for input parameters, and how did you find these values?**
+
+For this project, the input parameters chosen are:
+
+- `threshold_score`: The threshold score determines the similarity threshold for removing similar images. I experimented with different values to strike a balance between removing true duplicates and retaining potentially relevant but similar images.
+
+- `gaussian_blur_radius_list`: This list contains radii for Gaussian blur applied during image preprocessing. The values help in reducing noise and smooth out the image for better comparison. I selected a value of [5] after trying out various radii.
+
+- `black_mask`: This parameter defines the percentage of black mask borders around the image, which helps eliminate irrelevant regions. I used the values (5, 10, 5, 0) to create a black mask around the image edges while preserving the central region.
+
+The selection of these values was based on experimentation and observation of the dataset. I adjusted the parameters to achieve the best results in terms of accurately detecting similar images while avoiding the loss of potentially unique images.
+
+**4. What would you suggest implementing to improve data collection of unique cases in the future?**
+
+To improve data collection of unique cases in the future, the following suggestions can be considered:
+
+- Timestamp Standardization: Implementing a consistent timestamp format across all cameras can aid in the proper organization and comparison of images.
+
+- Quality Control: Conduct regular quality checks to ensure all images are correctly captured, and there are no corrupted or unreadable images in the dataset.
+
+- Diverse Scenarios: Expanding the dataset to include images captured under diverse scenarios, lighting conditions, and angles can increase the dataset's richness and aid in training more robust models.
+
+- Manual Verification: Conduct manual verification and labeling of images to identify any false positives or negatives generated by the automated image similarity detection process.
+
+**5. Any other comments about your solution?**
+
+The solution provided is an efficient and effective approach to identify and remove similar images from a dataset collected from multiple cameras. By utilizing multithreading and image processing techniques, the program can process large datasets and compare images quickly. However, it is essential to carefully select the threshold and other parameters to strike the right balance between maintaining unique images and eliminating redundant content. Additionally, considering potential improvements to the data collection process and verifying results manually can further enhance the accuracy and reliability of the solution.
 
 ## Installation
 
